@@ -18,23 +18,8 @@ function FillGoogleForms() {
                 item.setAttribute("badinput", "false");
                 // TODO: find the class that hides input inside text by reversed css finding
                 item.nextElementSibling.style.display = "none";
-
-                /* Idk what it is but something in hidden inputs changing
-                try{
-                    var idmsi = 0;
-                    for(let i=0; i<FB_PUBLIC_LOAD_DATA_[1][1].length; i++){
-                        if(FB_PUBLIC_LOAD_DATA_[1][1][i][1] == formTitle){
-                            idmsi = FB_PUBLIC_LOAD_DATA_[1][1][i][4][0][0];
-                        }
-                    }
-                    document.querySelector("input[name='entry." + idmsi + "']").value = answer;
-                }
-                catch(err){
-                    console.log("Load data error: " + err);
-                }*/
             }
         });
-
 
         // Fill textareas
         var fields = FormElement.querySelectorAll("textarea");
@@ -50,10 +35,16 @@ function FillGoogleForms() {
             }
         });
 
-
-        
+        // Handle multiple options presented as buttons or checkboxes
+        var multiOptionFields = FormElement.querySelectorAll("[role='checkbox'], [role='menuitemcheckbox'], [role='radio']");
+        multiOptionFields.forEach(function(option) {
+            var formTitle = option.closest("div[role='listitem']").querySelector("div[role='heading']").firstChild.textContent;
+            var answer = formData[formTitle.trim()];
+            if (answer && option.textContent.trim() === answer) {
+                option.click();
+            }
+        });
     });
 }
 
-
-window.onload = FillGoogleForms();
+window.onload = FillGoogleForms;
